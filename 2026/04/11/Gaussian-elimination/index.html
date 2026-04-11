@@ -14,7 +14,7 @@
 <meta property="og:description" content="使用场景高斯消元法是一种经典的数值算法，主要用于求解线性方程组。当方程组规模适中且系数矩阵非奇异时，该方法能够高效地给出精确解。 核心思想高斯消元法包含两个主要阶段：  消元阶段：通过初等行变换将增广矩阵转化为上三角矩阵。 回代阶段：自底向上求解，将矩阵进一步化为单位阵，得到方程组的解。   消元阶段的具体步骤消元过程需要逐行推进。对于每一行（假设当前为第 i 行），都必须依次执行以下三个关键操作">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-04-10T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-11T13:33:48.091Z">
+<meta property="article:modified_time" content="2026-04-11T13:41:31.210Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="矩阵">
 <meta property="article:tag" content="算法">
@@ -109,16 +109,15 @@
 </ol>
 <hr>
 <h2 id="消元阶段的具体步骤"><a href="#消元阶段的具体步骤" class="headerlink" title="消元阶段的具体步骤"></a>消元阶段的具体步骤</h2><p>消元过程需要逐行推进。对于每一行（假设当前为第 <code>i</code> 行），都必须依次执行以下三个关键操作。</p>
-<pre><code class="language-c">
-    for (int i = 0; i &lt; n; i++)
+<pre><code class="language-c">    for (int i = 0; i &lt; n; i++)
     {
         ...
     }
-
+```c
 ### 第一步：选取主元（列主元消去法）
 
 在当前列（第 `i` 列）中，从第 `i` 行开始向下寻找绝对值最大的系数所在行，并将该行交换至第 `i` 行的位置。这一步骤能够有效避免因除数过小导致的数值不稳定问题。
-
+```c
     int max = i;
     for (int j = i + 1; j &lt; n; j++)
     {
@@ -133,21 +132,21 @@
         determinant[max] = determinant[i];
         determinant[i] = temp;
     }
-
+```c
 ### 第二步：判断主元是否为零
 
 若经过换行处理后，当前的主元（即 `determinant[i][i]`）仍然为零，则说明系数矩阵是奇异的。此时线性方程组可能无解，或者存在无穷多组解。
-
+```c
     if (determinant[i][i] == 0.0)
     {
         printf(&quot;No Solution\n&quot;);
         return 0;
     }
-
+```c
 ### 第三步：归一化与消元
 
 -   **归一化**：将当前行的主元化为 `1`。具体做法是将该行所有的元素（包括常数列）都除以当前的主元值。
-
+```c
     for (int j = n; j &gt;= i; j--)
     {
         determinant[i][j] /= determinant[i][i];
@@ -159,9 +158,9 @@
             determinant[j][k] -= determinant[i][k] * determinant[j][i];
         }
     }
-
+```c
 -   **消元**：利用当前行，将位于该行之下的所有行中对应列（第 `i` 列）的元素消为 `0`。
-
+```c
     for (int i = n - 1; i &gt;= 1; i--)
     {
         for (int j = 0; j &lt; i; j++)
@@ -169,7 +168,7 @@
             determinant[j][n] -= determinant[i][n] * determinant[j][i];
         }
     }
-
+```c
 完成上述循环后，原始的增广矩阵即被成功转化为上三角矩阵形式。
 
 ---
@@ -177,7 +176,7 @@
 ## 回代阶段
 
 完成消元后，矩阵变为上三角形式。此时需要从最后一行开始，自底向上依次消去主元右侧的系数。经过回代，矩阵最终转化为单位阵，此时最后一列的数据即为方程组的解。
-
+```c
     for (int i = n - 1; i &gt;= 1; i--)
     {
         for (int j = 0; j &lt; i; j++)
@@ -185,7 +184,7 @@
             determinant[j][n] -= determinant[i][n] * determinant[j][i];
         }
     }
-
+```c
 ---
 
 ## 关键注意事项与易错点提醒
@@ -205,7 +204,7 @@
 
 -   题目来源：洛谷 P3389 【模板】高斯消元法
 -   AC代码:https://github.com/z-z-z-y-y-y/practice/blob/main/p3389_Gaussian-elimination.c
-
+```c
 #include &lt;stdio.h&gt;
 #include &lt;stdlib.h&gt;
 #include &lt;math.h&gt;
@@ -272,12 +271,13 @@ int main()
     }
     return 0;
 }
+```c
 </code></pre>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/04/11/Gaussian-elimination/" data-id="cuid6Z0tDna0boHL9i-4aFf6b" data-title="高斯消元法详解（附洛谷 P3389 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/04/11/Gaussian-elimination/" data-id="cuidETcFcuHnKytstDm8lQDe7" data-title="高斯消元法详解（附洛谷 P3389 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
