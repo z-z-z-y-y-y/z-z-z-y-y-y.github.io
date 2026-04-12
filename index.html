@@ -105,175 +105,41 @@
 </ol>
 <hr>
 <h2 id="消元阶段的具体步骤"><a href="#消元阶段的具体步骤" class="headerlink" title="消元阶段的具体步骤"></a>消元阶段的具体步骤</h2><p>消元过程需要逐行推进。对于每一行（假设当前为第 <code>i</code> 行），都必须依次执行以下三个关键操作。</p>
-<pre><code class="language-c">    for (int i = 0; i &lt; n; i++)
-    {
-        ...
-    }
-```c
-### 第一步：选取主元（列主元消去法）
-
-在当前列（第 `i` 列）中，从第 `i` 行开始向下寻找绝对值最大的系数所在行，并将该行交换至第 `i` 行的位置。这一步骤能够有效避免因除数过小导致的数值不稳定问题。
-```c
-    int max = i;
-    for (int j = i + 1; j &lt; n; j++)
-    {
-        if (fabs(determinant[j][i]) &gt; fabs(determinant[max][i]))
-        {
-            max = j;
-        }
-    }
-    if (max != i)
-    {
-        double *temp = determinant[max];
-        determinant[max] = determinant[i];
-        determinant[i] = temp;
-    }
-```c
-### 第二步：判断主元是否为零
-
-若经过换行处理后，当前的主元（即 `determinant[i][i]`）仍然为零，则说明系数矩阵是奇异的。此时线性方程组可能无解，或者存在无穷多组解。
-```c
-    if (determinant[i][i] == 0.0)
-    {
-        printf(&quot;No Solution\n&quot;);
-        return 0;
-    }
-```c
-### 第三步：归一化与消元
-
--   **归一化**：将当前行的主元化为 `1`。具体做法是将该行所有的元素（包括常数列）都除以当前的主元值。
-```c
-    for (int j = n; j &gt;= i; j--)
-    {
-        determinant[i][j] /= determinant[i][i];
-    }
-    for (int j = i + 1; j &lt; n; j++)
-    {
-        for (int k = n; k &gt;= i; k--)
-        {
-            determinant[j][k] -= determinant[i][k] * determinant[j][i];
-        }
-    }
-```c
--   **消元**：利用当前行，将位于该行之下的所有行中对应列（第 `i` 列）的元素消为 `0`。
-```c
-    for (int i = n - 1; i &gt;= 1; i--)
-    {
-        for (int j = 0; j &lt; i; j++)
-        {
-            determinant[j][n] -= determinant[i][n] * determinant[j][i];
-        }
-    }
-```c
-完成上述循环后，原始的增广矩阵即被成功转化为上三角矩阵形式。
-
----
-
-## 回代阶段
-
-完成消元后，矩阵变为上三角形式。此时需要从最后一行开始，自底向上依次消去主元右侧的系数。经过回代，矩阵最终转化为单位阵，此时最后一列的数据即为方程组的解。
-```c
-    for (int i = n - 1; i &gt;= 1; i--)
-    {
-        for (int j = 0; j &lt; i; j++)
-        {
-            determinant[j][n] -= determinant[i][n] * determinant[j][i];
-        }
-    }
-```c
----
-
-## 关键注意事项与易错点提醒
-
-### 1. 关于主元选取的时机
-这是本题最容易出错的地方。**绝对不可以**将选取主元与向下消元两个过程分离开来（即先一次性选好每一列的主元，再统一进行消元）。因为在高斯消元的进程中，矩阵的数值是动态变化的。如果在消元前就提前选定了主元，随着后续行变换的进行，最初选定的主元可能已不再是当前列的最优选择，这会直接导致计算结果错误。
-
-**正确做法**：务必在每一行处理开始前，当场实时选取当前列的主元。
-
-### 2. 关于精度处理
-在判断主元是否为零时，需要考虑到浮点数运算的精度误差。
-
--   在本题（洛谷 P3389）的数据范围下，使用 `== 0.0` 的判断方式通常已经足够。
--   但在其他精度要求更高或数据范围更广的场景中，直接判断等于零可能会导致误判。建议改用容差比较的方式，例如：判断绝对值是否小于 `1e-12` 等极小阈值。
-
----
-
--   题目来源：洛谷 P3389 【模板】高斯消元法
--   AC代码:https://github.com/z-z-z-y-y-y/practice/blob/main/p3389_Gaussian-elimination.c
-```c
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;math.h&gt;
-
-int main()
-{
-    int n;
-    scanf(&quot;%d&quot;, &amp;n);
-    double **determinant = (double **)malloc(sizeof(double *) * n);
-    for (int i = 0; i &lt; n; i++)
-    {
-        determinant[i] = (double *)malloc(sizeof(double) * (n + 1));
-    }
-    for (int i = 0; i &lt; n; i++)
-    {
-        for (int j = 0; j &lt;= n; j++)
-        {
-            scanf(&quot;%lf&quot;, &amp;determinant[i][j]);
-        }
-    }
-    for (int i = 0; i &lt; n; i++)
-    {
-        int max = i;
-        for (int j = i + 1; j &lt; n; j++)
-        {
-            if (fabs(determinant[j][i]) &gt; fabs(determinant[max][i]))
-            {
-                max = j;
-            }
-        }
-        if (max != i)
-        {
-            double *temp = determinant[max];
-            determinant[max] = determinant[i];
-            determinant[i] = temp;
-        }
-        if (determinant[i][i] == 0.0)
-        {
-            printf(&quot;No Solution\n&quot;);
-            return 0;
-        }   
-            for (int j = n; j &gt;= i; j--)
-            {
-                determinant[i][j] /= determinant[i][i];
-            }
-            for (int j = i + 1; j &lt; n; j++)
-            {
-                for (int k = n; k &gt;= i; k--)
-                {
-                    determinant[j][k] -= determinant[i][k] * determinant[j][i];
-                }
-            }
-    }
-    for (int i = n - 1; i &gt;= 1; i--)
-    {
-        for (int j = 0; j &lt; i; j++)
-        {
-            determinant[j][n] -= determinant[i][n] * determinant[j][i];
-        }
-    }
-    for (int i = 0; i &lt; n; i++)
-    {
-        printf(&quot;%.2lf\n&quot;, determinant[i][n]);
-    }
-    return 0;
-}
-```c
-</code></pre>
-
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="第一步：选取主元（列主元消去法）"><a href="#第一步：选取主元（列主元消去法）" class="headerlink" title="第一步：选取主元（列主元消去法）"></a>第一步：选取主元（列主元消去法）</h3><p>在当前列（第 <code>i</code> 列）中，从第 <code>i</code> 行开始向下寻找绝对值最大的系数所在行，并将该行交换至第 <code>i</code> 行的位置。这一步骤能够有效避免因除数过小导致的数值不稳定问题。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> max = i;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">fabs</span>(determinant[j][i]) &gt; <span class="built_in">fabs</span>(determinant[max][i]))</span><br><span class="line">    &#123;</span><br><span class="line">        max = j;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (max != i)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">double</span> *temp = determinant[max];</span><br><span class="line">    determinant[max] = determinant[i];</span><br><span class="line">    determinant[i] = temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="第二步：判断主元是否为零"><a href="#第二步：判断主元是否为零" class="headerlink" title="第二步：判断主元是否为零"></a>第二步：判断主元是否为零</h3><p>若经过换行处理后，当前的主元（即 <code>determinant[i][i]</code>）仍然为零，则说明系数矩阵是奇异的。此时线性方程组可能无解，或者存在无穷多组解。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (determinant[i][i] == <span class="number">0.0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;No Solution\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="第三步：归一化与消元"><a href="#第三步：归一化与消元" class="headerlink" title="第三步：归一化与消元"></a>第三步：归一化与消元</h3><ul>
+<li><strong>归一化</strong>：将当前行的主元化为 <code>1</code>。具体做法是将该行所有的元素（包括常数列）都除以当前的主元值。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> j = n; j &gt;= i; j--)</span><br><span class="line">&#123;</span><br><span class="line">    determinant[i][j] /= determinant[i][i];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = n; k &gt;= i; k--)</span><br><span class="line">    &#123;</span><br><span class="line">        determinant[j][k] -= determinant[i][k] * determinant[j][i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>消元</strong>：利用当前行，将位于该行之下的所有行中对应列（第 <code>i</code> 列）的元素消为 <code>0</code>。</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        determinant[j][n] -= determinant[i][n] * determinant[j][i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完成上述循环后，原始的增广矩阵即被成功转化为上三角矩阵形式。</p>
+<hr>
+<h2 id="回代阶段"><a href="#回代阶段" class="headerlink" title="回代阶段"></a>回代阶段</h2><p>完成消元后，矩阵变为上三角形式。此时需要从最后一行开始，自底向上依次消去主元右侧的系数。经过回代，矩阵最终转化为单位阵，此时最后一列的数据即为方程组的解。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        determinant[j][n] -= determinant[i][n] * determinant[j][i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="关键注意事项与易错点提醒"><a href="#关键注意事项与易错点提醒" class="headerlink" title="关键注意事项与易错点提醒"></a>关键注意事项与易错点提醒</h2><h3 id="1-关于主元选取的时机"><a href="#1-关于主元选取的时机" class="headerlink" title="1. 关于主元选取的时机"></a>1. 关于主元选取的时机</h3><p>这是本题最容易出错的地方。<strong>绝对不可以</strong>将选取主元与向下消元两个过程分离开来（即先一次性选好每一列的主元，再统一进行消元）。因为在高斯消元的进程中，矩阵的数值是动态变化的。如果在消元前就提前选定了主元，随着后续行变换的进行，最初选定的主元可能已不再是当前列的最优选择，这会直接导致计算结果错误。</p>
+<p><strong>正确做法</strong>：务必在每一行处理开始前，当场实时选取当前列的主元。</p>
+<h3 id="2-关于精度处理"><a href="#2-关于精度处理" class="headerlink" title="2. 关于精度处理"></a>2. 关于精度处理</h3><p>在判断主元是否为零时，需要考虑到浮点数运算的精度误差。</p>
+<ul>
+<li>在本题（洛谷 P3389）的数据范围下，使用 <code>== 0.0</code> 的判断方式通常已经足够。</li>
+<li>但在其他精度要求更高或数据范围更广的场景中，直接判断等于零可能会导致误判。建议改用容差比较的方式，例如：判断绝对值是否小于 <code>1e-12</code> 等极小阈值。</li>
+</ul>
+<hr>
+<ul>
+<li>题目来源：洛谷 P3389 【模板】高斯消元法</li>
+<li>AC代码:<a target="_blank" rel="noopener" href="https://github.com/z-z-z-y-y-y/practice/blob/main/p3389_Gaussian-elimination.c">https://github.com/z-z-z-y-y-y/practice/blob/main/p3389_Gaussian-elimination.c</a></li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="type">double</span> **determinant = (<span class="type">double</span> **)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">double</span> *) * n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        determinant[i] = (<span class="type">double</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">double</span>) * (n + <span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= n; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">&quot;%lf&quot;</span>, &amp;determinant[i][j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> max = i;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">fabs</span>(determinant[j][i]) &gt; <span class="built_in">fabs</span>(determinant[max][i]))</span><br><span class="line">            &#123;</span><br><span class="line">                max = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (max != i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">double</span> *temp = determinant[max];</span><br><span class="line">            determinant[max] = determinant[i];</span><br><span class="line">            determinant[i] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (determinant[i][i] == <span class="number">0.0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;No Solution\n&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;   </span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = n; j &gt;= i; j--)</span><br><span class="line">            &#123;</span><br><span class="line">                determinant[i][j] /= determinant[i][i];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> k = n; k &gt;= i; k--)</span><br><span class="line">                &#123;</span><br><span class="line">                    determinant[j][k] -= determinant[i][k] * determinant[j][i];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            determinant[j][n] -= determinant[i][n] * determinant[j][i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%.2lf\n&quot;</span>, determinant[i][n]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/04/11/Gaussian-elimination/" data-id="cuiduhTzCAjTWt4Nw2QggpemY" data-title="高斯消元法详解（附洛谷 P3389 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/04/11/Gaussian-elimination/" data-id="cuidw9FvLhumKQdfamd-gTeS2" data-title="高斯消元法详解（附洛谷 P3389 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -393,7 +259,7 @@ int main()
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/04/06/KMP-Algorithm/" data-id="cuidpbTLTpd8Lj5TEaqVq6m7R" data-title="KMP 字符串匹配算法详解（附洛谷 P3375 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/04/06/KMP-Algorithm/" data-id="cuidrii9iFMtqv8jK6w0Q3mU1" data-title="KMP 字符串匹配算法详解（附洛谷 P3375 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
