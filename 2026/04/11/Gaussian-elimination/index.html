@@ -1,12 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  
-  
-  <title>高斯消元法详解（附洛谷 P3389 AC 代码） | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="高斯消元法的列主元策略与回代过程，附带洛谷 P3389 的 C 语言实现代码。">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="高斯消元法的列主元策略与回代过程，附带洛谷 P3389 的 C 语言实现代码。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="高斯消元法详解（附洛谷 P3389 AC 代码）">
 <meta property="og:url" content="http://example.com/2026/04/11/Gaussian-elimination/index.html">
@@ -14,303 +28,349 @@
 <meta property="og:description" content="高斯消元法的列主元策略与回代过程，附带洛谷 P3389 的 C 语言实现代码。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-04-10T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-04-12T06:21:14.129Z">
+<meta property="article:modified_time" content="2026-04-12T09:23:37.822Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="数学">
 <meta property="article:tag" content="矩阵">
 <meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2026/04/11/Gaussian-elimination/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"http://example.com/2026/04/11/Gaussian-elimination/","path":"2026/04/11/Gaussian-elimination/","title":"高斯消元法详解（附洛谷 P3389 AC 代码）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>高斯消元法详解（附洛谷 P3389 AC 代码） | Hexo</title>
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+
+
+
 
   
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
 
   
+
+
+
+
+
+
   
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.2.0/css/fork-awesome.min.css">
 
-<meta name="generator" content="Hexo 8.1.1"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js" defer></script>
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
         
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-        
-          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
-        
-        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%A0%B8%E5%BF%83%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">1. 算法核心流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E5%85%83%E9%98%B6%E6%AE%B5%E7%9A%84%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">2. 消元阶段的详细步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%89%E5%8F%96%E4%B8%BB%E5%85%83%E5%88%97%E4%B8%BB%E5%85%83%E7%AD%96%E7%95%A5"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 选取主元（列主元策略）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E4%B8%BB%E5%85%83%E6%98%AF%E5%90%A6%E4%B8%BA%E9%9B%B6"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 判断主元是否为零</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%92%E4%B8%80%E5%8C%96%E4%B8%8E%E6%B6%88%E5%85%83"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 归一化与消元</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9E%E4%BB%A3%E9%98%B6%E6%AE%B5"><span class="nav-number">3.</span> <span class="nav-text">3. 回代阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%88%86%E6%9E%90"><span class="nav-number">3.1.</span> <span class="nav-text">复杂度分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%AE%9E%E7%8E%B0%E4%B8%8E%E6%98%93%E9%94%99%E7%82%B9"><span class="nav-number">4.</span> <span class="nav-text">4. 编码实现与易错点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E5%85%83%E9%80%89%E5%8F%96%E7%9A%84%E6%97%B6%E6%9C%BA"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 主元选取的时机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B2%BE%E5%BA%A6%E5%A4%84%E7%90%86"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 精度处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0c%E8%AF%AD%E8%A8%80"><span class="nav-number">5.</span> <span class="nav-text">5. 完整代码实现（C语言）</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
       </div>
     </div>
-  </div>
-</header>
 
-      <div class="outer">
-        <section id="main"><article id="post-Gaussian-elimination" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2026/04/11/Gaussian-elimination/" class="article-date">
-  <time class="dt-published" datetime="2026-04-10T16:00:00.000Z" itemprop="datePublished">2026-04-11</time>
-</a>
     
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/">算法笔记</a>
-  </div>
+  </aside>
 
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="p-name article-title" itemprop="headline name">
-      高斯消元法详解（附洛谷 P3389 AC 代码）
-    </h1>
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
   
 
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2026/04/11/Gaussian-elimination/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="高斯消元法详解（附洛谷 P3389 AC 代码） | Hexo">
+      <meta itemprop="description" content="高斯消元法的列主元策略与回代过程，附带洛谷 P3389 的 C 语言实现代码。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          高斯消元法详解（附洛谷 P3389 AC 代码）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2026-04-11 00:00:00" itemprop="dateCreated datePublished" datetime="2026-04-11T00:00:00+08:00">2026-04-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2026-04-12 17:23:37" itemprop="dateModified" datetime="2026-04-12T17:23:37+08:00">2026-04-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">算法学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">高斯消元法的列主元策略与回代过程，附带洛谷 P3389 的 C 语言实现代码。</div>
+        </div>
       </header>
+
     
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>在解决线性代数问题时，求解线性方程组是最基础的任务之一。高斯消元法（Gaussian Elimination）通过初等行变换，能将复杂的方程组转化为易于求解的三角形式。</p>
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>在解决线性代数问题时，求解线性方程组是最基础的任务之一。高斯消元法（Gaussian Elimination）通过初等行变换，能将复杂的方程组转化为易于求解的三角形式。</p>
 <p><strong>核心观点</strong>：标准的高斯消元包含“消元”和“回代”两个阶段。为了保证数值稳定性，实际编码中通常采用<strong>列主元消去法</strong>，即在每一列中选取绝对值最大的元素作为主元进行计算。</p>
 <span id="more"></span>
-
-<h2 id="1-算法核心流程"><a href="#1-算法核心流程" class="headerlink" title="1. 算法核心流程"></a>1. 算法核心流程</h2><p>高斯消元法的整体逻辑可以分为两个部分：</p>
-<ol>
+<h2 id="算法核心流程">1. 算法核心流程</h2>
+<p>高斯消元法的整体逻辑可以分为两个部分：</p>
+<ol type="1">
 <li><strong>消元阶段</strong>：将增广矩阵转化为上三角矩阵。</li>
 <li><strong>回代阶段</strong>：自底向上求解，将上三角矩阵进一步化为单位阵，从而直接读取解。</li>
 </ol>
-<hr>
-<h2 id="2-消元阶段的详细步骤"><a href="#2-消元阶段的详细步骤" class="headerlink" title="2. 消元阶段的详细步骤"></a>2. 消元阶段的详细步骤</h2><p>消元过程需要逐行处理。对于第 <code>i</code> 行，我们需要执行以下三个关键操作：</p>
-<h3 id="2-1-选取主元（列主元策略）"><a href="#2-1-选取主元（列主元策略）" class="headerlink" title="2.1 选取主元（列主元策略）"></a>2.1 选取主元（列主元策略）</h3><p>为了防止因除数过小导致的精度损失或除零错误，我们需要在当前列（第 <code>i</code> 列）中，从第 <code>i</code> 行开始向下寻找绝对值最大的系数。</p>
-<ul>
-<li>找到后，将该行与第 <code>i</code> 行进行交换。</li>
-<li>这是保证算法鲁棒性的关键一步。</li>
-</ul>
-<h3 id="2-2-判断主元是否为零"><a href="#2-2-判断主元是否为零" class="headerlink" title="2.2 判断主元是否为零"></a>2.2 判断主元是否为零</h3><p>如果经过换行处理后，当前的主元（即 <code>matrix[i][i]</code>）依然为零，说明该系数矩阵是奇异的。</p>
-<ul>
-<li>此时方程组可能无解，或者有无穷多组解。</li>
-<li>在代码中通常直接返回 “No Solution”。</li>
-</ul>
-<h3 id="2-3-归一化与消元"><a href="#2-3-归一化与消元" class="headerlink" title="2.3 归一化与消元"></a>2.3 归一化与消元</h3><ol>
+<hr />
+<h2 id="消元阶段的详细步骤">2. 消元阶段的详细步骤</h2>
+<p>消元过程需要逐行处理。对于第 <code>i</code> 行，我们需要执行以下三个关键操作：</p>
+<h3 id="选取主元列主元策略">2.1 选取主元（列主元策略）</h3>
+<p>为了防止因除数过小导致的精度损失或除零错误，我们需要在当前列（第 <code>i</code> 列）中，从第 <code>i</code> 行开始向下寻找绝对值最大的系数。 - 找到后，将该行与第 <code>i</code> 行进行交换。 - 这是保证算法鲁棒性的关键一步。</p>
+<h3 id="判断主元是否为零">2.2 判断主元是否为零</h3>
+<p>如果经过换行处理后，当前的主元（即 <code>matrix[i][i]</code>）依然为零，说明该系数矩阵是奇异的。 - 此时方程组可能无解，或者有无穷多组解。 - 在代码中通常直接返回 “No Solution”。</p>
+<h3 id="归一化与消元">2.3 归一化与消元</h3>
+<ol type="1">
 <li><strong>归一化</strong>：将当前行的所有元素除以主元值，使主元变为 1。</li>
 <li><strong>消元</strong>：利用当前行，将该行之下所有行中对应列（第 <code>i</code> 列）的元素消为 0。</li>
 </ol>
-<hr>
-<h2 id="3-回代阶段"><a href="#3-回代阶段" class="headerlink" title="3. 回代阶段"></a>3. 回代阶段</h2><p>完成消元后，矩阵变为上三角形式。此时我们需要从最后一行开始，自底向上依次消去主元右侧的系数。</p>
+<hr />
+<h2 id="回代阶段">3. 回代阶段</h2>
+<p>完成消元后，矩阵变为上三角形式。此时我们需要从最后一行开始，自底向上依次消去主元右侧的系数。</p>
 <ul>
 <li>通过 <code>determinant[j][n] -= determinant[i][n] * determinant[j][i]</code> 这类运算，逐步消除非对角线元素。</li>
 <li>最终，矩阵转化为单位阵，最后一列的数据即为方程组的解。</li>
 </ul>
-<hr>
-<h3 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h3><p>对于高斯消元法，其性能表现如下表所示：</p>
+<hr />
+<h3 id="复杂度分析">复杂度分析</h3>
+<p>对于高斯消元法，其性能表现如下表所示：</p>
 <table>
 <thead>
-<tr>
-<th align="left">维度</th>
-<th align="left">复杂度</th>
-<th align="left">说明</th>
+<tr class="header">
+<th style="text-align: left;">维度</th>
+<th style="text-align: left;">复杂度</th>
+<th style="text-align: left;">说明</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left"><strong>时间复杂度</strong></td>
-<td align="left">$O(n^3)$</td>
-<td align="left">主要由三层嵌套循环决定（外层循环 $n$ 次，内层消元操作约 $n^2$ 次）</td>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>时间复杂度</strong></td>
+<td style="text-align: left;"><span class="math inline"><em>O</em>(<em>n</em><sup>3</sup>)</span></td>
+<td style="text-align: left;">主要由三层嵌套循环决定（外层循环 <span class="math inline"><em>n</em></span> 次，内层消元操作约 <span class="math inline"><em>n</em><sup>2</sup></span> 次）</td>
 </tr>
-<tr>
-<td align="left"><strong>空间复杂度</strong></td>
-<td align="left">$O(n^2)$</td>
-<td align="left">主要用于存储 $n \times (n+1)$ 的增广矩阵</td>
+<tr class="even">
+<td style="text-align: left;"><strong>空间复杂度</strong></td>
+<td style="text-align: left;"><span class="math inline"><em>O</em>(<em>n</em><sup>2</sup>)</span></td>
+<td style="text-align: left;">主要用于存储 <span class="math inline"><em>n</em> × (<em>n</em> + 1)</span> 的增广矩阵</td>
 </tr>
-</tbody></table>
-<h2 id="4-编码实现与易错点"><a href="#4-编码实现与易错点" class="headerlink" title="4. 编码实现与易错点"></a>4. 编码实现与易错点</h2><h3 id="4-1-主元选取的时机"><a href="#4-1-主元选取的时机" class="headerlink" title="4.1 主元选取的时机"></a>4.1 主元选取的时机</h3><p>这是一个常见的误区：<strong>不能</strong>将“选取所有主元”和“执行消元”这两个过程分离开来。</p>
-<ul>
-<li><strong>错误做法</strong>：先遍历一遍矩阵选好所有主元，再进行消元。</li>
-<li><strong>正确做法</strong>：必须在处理每一行（第 <code>i</code> 行）开始前，实时选取当前列的主元。因为随着消元的进行，矩阵的数值是动态变化的，提前选定的主元可能已不再适用。</li>
-</ul>
-<h3 id="4-2-精度处理"><a href="#4-2-精度处理" class="headerlink" title="4.2 精度处理"></a>4.2 精度处理</h3><p>在判断主元是否为零时，必须考虑浮点数误差。</p>
-<ul>
-<li>在本题（洛谷 P3389）中，数据范围较友好，直接判断 <code>== 0.0</code> 通常可行。</li>
-<li>但在一般工程应用中，建议使用容差比较，例如 <code>fabs(x) &lt; 1e-12</code>，以避免精度误判。</li>
-</ul>
-<hr>
-<h2 id="5-完整代码实现（C语言）"><a href="#5-完整代码实现（C语言）" class="headerlink" title="5. 完整代码实现（C语言）"></a>5. 完整代码实现（C语言）</h2><p>题目来源：<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3389">洛谷 P3389 【模板】高斯消元法</a></p>
+</tbody>
+</table>
+<h2 id="编码实现与易错点">4. 编码实现与易错点</h2>
+<h3 id="主元选取的时机">4.1 主元选取的时机</h3>
+<p>这是一个常见的误区：<strong>不能</strong>将“选取所有主元”和“执行消元”这两个过程分离开来。 - <strong>错误做法</strong>：先遍历一遍矩阵选好所有主元，再进行消元。 - <strong>正确做法</strong>：必须在处理每一行（第 <code>i</code> 行）开始前，实时选取当前列的主元。因为随着消元的进行，矩阵的数值是动态变化的，提前选定的主元可能已不再适用。</p>
+<h3 id="精度处理">4.2 精度处理</h3>
+<p>在判断主元是否为零时，必须考虑浮点数误差。 - 在本题（洛谷 P3389）中，数据范围较友好，直接判断 <code>== 0.0</code> 通常可行。 - 但在一般工程应用中，建议使用容差比较，例如 <code>fabs(x) &lt; 1e-12</code>，以避免精度误判。</p>
+<hr />
+<h2 id="完整代码实现c语言">5. 完整代码实现（C语言）</h2>
+<p>题目来源：<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3389">洛谷 P3389 【模板】高斯消元法</a></p>
 <p>下面是我在洛谷上 AC 的完整代码，你可以直接参考或在 GitHub 上查看：<a target="_blank" rel="noopener" href="https://github.com/z-z-z-y-y-y/practice/blob/main/p3389_Gaussian-elimination.c">p3389_Gaussian-elimination.c</a>。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="type">double</span> **determinant = (<span class="type">double</span> **)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">double</span> *) * n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        determinant[i] = (<span class="type">double</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">double</span>) * (n + <span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= n; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">&quot;%lf&quot;</span>, &amp;determinant[i][j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> max = i;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">fabs</span>(determinant[j][i]) &gt; <span class="built_in">fabs</span>(determinant[max][i]))</span><br><span class="line">            &#123;</span><br><span class="line">                max = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (max != i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">double</span> *temp = determinant[max];</span><br><span class="line">            determinant[max] = determinant[i];</span><br><span class="line">            determinant[i] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (determinant[i][i] == <span class="number">0.0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;No Solution\n&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;   </span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = n; j &gt;= i; j--)</span><br><span class="line">            &#123;</span><br><span class="line">                determinant[i][j] /= determinant[i][i];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> k = n; k &gt;= i; k--)</span><br><span class="line">                &#123;</span><br><span class="line">                    determinant[j][k] -= determinant[i][k] * determinant[j][i];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            determinant[j][n] -= determinant[i][n] * determinant[j][i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%.2lf\n&quot;</span>, determinant[i][n]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2026/04/11/Gaussian-elimination/" data-id="cuid7yyvoU29Tj0blzvDoNo4_" data-title="高斯消元法详解（附洛谷 P3389 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%9F%A9%E9%98%B5/" rel="tag">矩阵</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
 
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+              <a href="/tags/%E7%9F%A9%E9%98%B5/" rel="tag"># 矩阵</a>
+              <a href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag"># 数学</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/04/06/KMP-Algorithm/" rel="prev" title="KMP 字符串匹配算法详解（附洛谷p3375 AC 代码）">
+                  <i class="fa fa-angle-left"></i> KMP 字符串匹配算法详解（附洛谷p3375 AC 代码）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/04/12/Matrix_Inversion/" rel="next" title="矩阵求逆的方法（附洛谷 p4783 AC 代码）">
+                  矩阵求逆的方法（附洛谷 p4783 AC 代码） <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
     </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">John Doe</span>
   </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2026/04/12/Matrix_Inversion/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          矩阵求逆的方法（附洛谷 p4783 AC 代码）
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2026/04/06/KMP-Algorithm/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">KMP 字符串匹配算法详解（附洛谷p3375 AC 代码）</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/">算法学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/">算法笔记</a></li></ul>
-    </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/KMP/" rel="tag">KMP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag">字符串</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%A9%E9%98%B5/" rel="tag">矩阵</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/KMP/" style="font-size: 10px;">KMP</a> <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="font-size: 10px;">字符串</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 15px;">数学</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%9F%A9%E9%98%B5/" style="font-size: 15px;">矩阵</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2026/04/">April 2026</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2026/04/12/Matrix_Inversion/">矩阵求逆的方法（附洛谷 p4783 AC 代码）</a>
-          </li>
-        
-          <li>
-            <a href="/2026/04/11/Gaussian-elimination/">高斯消元法详解（附洛谷 P3389 AC 代码）</a>
-          </li>
-        
-          <li>
-            <a href="/2026/04/06/KMP-Algorithm/">KMP 字符串匹配算法详解（附洛谷p3375 AC 代码）</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2026 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
 
     </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.6.4.min.js"></script>
-
-
+  </footer>
 
   
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
   </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
 </body>
 </html>
