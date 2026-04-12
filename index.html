@@ -71,6 +71,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Matrix_Inversion" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2026/04/12/Matrix_Inversion/" class="article-date">
+  <time class="dt-published" datetime="2026-04-11T16:00:00.000Z" itemprop="datePublished">2026-04-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/">算法学习</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2026/04/12/Matrix_Inversion/">矩阵求逆的方法（附洛谷 p4783 AC 代码）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>矩阵求逆是线性代数中重要的一个板块，由于计算机在处理多位小数是会出现精度误差，因此我们使用模运算，通过乘法逆元来减小误差。学会如何快速求乘法逆元，就可以掌握求矩阵逆的方法。下面是两种使用计算机快速求解乘法逆元的算法介绍(以<a href="">洛谷p4783</a>为例)。</p>
+<p><strong>核心观点</strong>：使用模运算乘法逆元来准确运算逆矩阵</p>
+        
+          <p class="article-more-link">
+            <a href="/2026/04/12/Matrix_Inversion/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2026/04/12/Matrix_Inversion/" data-id="cuid-v2F1tSPvkuc1x95Z_S5l" data-title="矩阵求逆的方法（附洛谷 p4783 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%9F%A9%E9%98%B5/" rel="tag">矩阵</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-Gaussian-elimination" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2026/04/11/Gaussian-elimination/" class="article-date">
@@ -78,7 +128,7 @@
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/">算法学习</a>
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/">算法笔记</a>
   </div>
 
   </div>
@@ -97,53 +147,21 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>高斯消元法是一种经典的数值算法，主要用于求解线性方程组。当方程组规模适中且系数矩阵非奇异时，该方法能够高效地给出精确解。</p>
-<h2 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h2><p>高斯消元法包含两个主要阶段：</p>
-<ol>
-<li><strong>消元阶段</strong>：通过初等行变换将增广矩阵转化为上三角矩阵。</li>
-<li><strong>回代阶段</strong>：自底向上求解，将矩阵进一步化为单位阵，得到方程组的解。</li>
-</ol>
-<hr>
-<h2 id="消元阶段的具体步骤"><a href="#消元阶段的具体步骤" class="headerlink" title="消元阶段的具体步骤"></a>消元阶段的具体步骤</h2><p>消元过程需要逐行推进。对于每一行（假设当前为第 <code>i</code> 行），都必须依次执行以下三个关键操作。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="第一步：选取主元（列主元消去法）"><a href="#第一步：选取主元（列主元消去法）" class="headerlink" title="第一步：选取主元（列主元消去法）"></a>第一步：选取主元（列主元消去法）</h3><p>在当前列（第 <code>i</code> 列）中，从第 <code>i</code> 行开始向下寻找绝对值最大的系数所在行，并将该行交换至第 <code>i</code> 行的位置。这一步骤能够有效避免因除数过小导致的数值不稳定问题。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> max = i;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">fabs</span>(determinant[j][i]) &gt; <span class="built_in">fabs</span>(determinant[max][i]))</span><br><span class="line">    &#123;</span><br><span class="line">        max = j;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (max != i)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">double</span> *temp = determinant[max];</span><br><span class="line">    determinant[max] = determinant[i];</span><br><span class="line">    determinant[i] = temp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="第二步：判断主元是否为零"><a href="#第二步：判断主元是否为零" class="headerlink" title="第二步：判断主元是否为零"></a>第二步：判断主元是否为零</h3><p>若经过换行处理后，当前的主元（即 <code>determinant[i][i]</code>）仍然为零，则说明系数矩阵是奇异的。此时线性方程组可能无解，或者存在无穷多组解。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (determinant[i][i] == <span class="number">0.0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;No Solution\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="第三步：归一化与消元"><a href="#第三步：归一化与消元" class="headerlink" title="第三步：归一化与消元"></a>第三步：归一化与消元</h3><ul>
-<li><strong>归一化</strong>：将当前行的主元化为 <code>1</code>。具体做法是将该行所有的元素（包括常数列）都除以当前的主元值。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> j = n; j &gt;= i; j--)</span><br><span class="line">&#123;</span><br><span class="line">    determinant[i][j] /= determinant[i][i];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> k = n; k &gt;= i; k--)</span><br><span class="line">    &#123;</span><br><span class="line">        determinant[j][k] -= determinant[i][k] * determinant[j][i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>消元</strong>：利用当前行，将位于该行之下的所有行中对应列（第 <code>i</code> 列）的元素消为 <code>0</code>。</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        determinant[j][n] -= determinant[i][n] * determinant[j][i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>完成上述循环后，原始的增广矩阵即被成功转化为上三角矩阵形式。</p>
-<hr>
-<h2 id="回代阶段"><a href="#回代阶段" class="headerlink" title="回代阶段"></a>回代阶段</h2><p>完成消元后，矩阵变为上三角形式。此时需要从最后一行开始，自底向上依次消去主元右侧的系数。经过回代，矩阵最终转化为单位阵，此时最后一列的数据即为方程组的解。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        determinant[j][n] -= determinant[i][n] * determinant[j][i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="关键注意事项与易错点提醒"><a href="#关键注意事项与易错点提醒" class="headerlink" title="关键注意事项与易错点提醒"></a>关键注意事项与易错点提醒</h2><h3 id="1-关于主元选取的时机"><a href="#1-关于主元选取的时机" class="headerlink" title="1. 关于主元选取的时机"></a>1. 关于主元选取的时机</h3><p>这是本题最容易出错的地方。<strong>绝对不可以</strong>将选取主元与向下消元两个过程分离开来（即先一次性选好每一列的主元，再统一进行消元）。因为在高斯消元的进程中，矩阵的数值是动态变化的。如果在消元前就提前选定了主元，随着后续行变换的进行，最初选定的主元可能已不再是当前列的最优选择，这会直接导致计算结果错误。</p>
-<p><strong>正确做法</strong>：务必在每一行处理开始前，当场实时选取当前列的主元。</p>
-<h3 id="2-关于精度处理"><a href="#2-关于精度处理" class="headerlink" title="2. 关于精度处理"></a>2. 关于精度处理</h3><p>在判断主元是否为零时，需要考虑到浮点数运算的精度误差。</p>
-<ul>
-<li>在本题（洛谷 P3389）的数据范围下，使用 <code>== 0.0</code> 的判断方式通常已经足够。</li>
-<li>但在其他精度要求更高或数据范围更广的场景中，直接判断等于零可能会导致误判。建议改用容差比较的方式，例如：判断绝对值是否小于 <code>1e-12</code> 等极小阈值。</li>
-</ul>
-<hr>
-<ul>
-<li>题目来源：洛谷 P3389 【模板】高斯消元法</li>
-<li>AC代码:<a target="_blank" rel="noopener" href="https://github.com/z-z-z-y-y-y/practice/blob/main/p3389_Gaussian-elimination.c">https://github.com/z-z-z-y-y-y/practice/blob/main/p3389_Gaussian-elimination.c</a></li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;math.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> n;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">&quot;%d&quot;</span>, &amp;n);</span><br><span class="line">    <span class="type">double</span> **determinant = (<span class="type">double</span> **)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">double</span> *) * n);</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        determinant[i] = (<span class="type">double</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">double</span>) * (n + <span class="number">1</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt;= n; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">scanf</span>(<span class="string">&quot;%lf&quot;</span>, &amp;determinant[i][j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> max = i;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">fabs</span>(determinant[j][i]) &gt; <span class="built_in">fabs</span>(determinant[max][i]))</span><br><span class="line">            &#123;</span><br><span class="line">                max = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (max != i)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="type">double</span> *temp = determinant[max];</span><br><span class="line">            determinant[max] = determinant[i];</span><br><span class="line">            determinant[i] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (determinant[i][i] == <span class="number">0.0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;No Solution\n&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;   </span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = n; j &gt;= i; j--)</span><br><span class="line">            &#123;</span><br><span class="line">                determinant[i][j] /= determinant[i][i];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> k = n; k &gt;= i; k--)</span><br><span class="line">                &#123;</span><br><span class="line">                    determinant[j][k] -= determinant[i][k] * determinant[j][i];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt;= <span class="number">1</span>; i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; i; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            determinant[j][n] -= determinant[i][n] * determinant[j][i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%.2lf\n&quot;</span>, determinant[i][n]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>在解决线性代数问题时，求解线性方程组是最基础的任务之一。高斯消元法（Gaussian Elimination）通过初等行变换，能将复杂的方程组转化为易于求解的三角形式。</p>
+<p><strong>核心观点</strong>：标准的高斯消元包含“消元”和“回代”两个阶段。为了保证数值稳定性，实际编码中通常采用<strong>列主元消去法</strong>，即在每一列中选取绝对值最大的元素作为主元进行计算。</p>
+        
+          <p class="article-more-link">
+            <a href="/2026/04/11/Gaussian-elimination/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/04/11/Gaussian-elimination/" data-id="cuidw9FvLhumKQdfamd-gTeS2" data-title="高斯消元法详解（附洛谷 P3389 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/04/11/Gaussian-elimination/" data-id="cuid7yyvoU29Tj0blzvDoNo4_" data-title="高斯消元法详解（附洛谷 P3389 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%9F%A9%E9%98%B5/" rel="tag">矩阵</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%9F%A9%E9%98%B5/" rel="tag">矩阵</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
 
     </footer>
   </div>
@@ -171,7 +189,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2026/04/06/KMP-Algorithm/">KMP 字符串匹配算法详解（附洛谷 P3375 AC 代码）</a>
+      <a class="p-name article-title" href="/2026/04/06/KMP-Algorithm/">KMP 字符串匹配算法详解（附洛谷p3375 AC 代码）</a>
     </h1>
   
 
@@ -179,91 +197,21 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>在长字符串 <code>s1</code> 中查找<strong>给定字符串 <code>s2</code> 所有重复出现的位置</strong>（即字符串匹配问题）。</p>
-<h2 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h2><p>KMP 算法通过预处理模式串 <code>s2</code> 的<strong>部分匹配表（前缀函数 π）</strong>，利用模式串自身的重复模式，避免在匹配失败时回溯主串 <code>s1</code> 的指针，从而将匹配复杂度优化到 <strong>O(n + m)</strong>。</p>
-<blockquote>
-<p><strong>简单示例</strong>：<br>主串 <code>s1 = &quot;ABACABABC&quot;</code>，模式串 <code>s2 = &quot;ABA&quot;</code>。<br>注意到 <code>s2</code> 中前缀 <code>&quot;A&quot;</code> 与后缀 <code>&quot;A&quot;</code> 重复，因此当第一次匹配成功后，可以将模式串直接滑动到已匹配后缀的位置，避免对主串的重复检查。</p>
-</blockquote>
-<h2 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h2><p>   时间复杂度：O(|s1|+|s2|)<br>   空间复杂度：O(|s2|)</p>
-<h2 id="核心步骤"><a href="#核心步骤" class="headerlink" title="核心步骤"></a>核心步骤</h2><ol>
-<li><strong>构建前缀函数（π 数组）</strong><br>对模式串 <code>s2</code> 预处理，计算每个位置的最长相等前后缀长度。</li>
-<li><strong>字符串匹配</strong><br>遍历主串 <code>s1</code>，利用前缀函数跳过不必要的比较。</li>
-</ol>
-<h2 id="例题：洛谷-P3375-【模板】KMP"><a href="#例题：洛谷-P3375-【模板】KMP" class="headerlink" title="例题：洛谷 P3375 【模板】KMP"></a>例题：<a target="_blank" rel="noopener" href="https://www.luogu.com.cn/problem/P3375">洛谷 P3375 【模板】KMP</a></h2><h3 id="代码实现（C语言）"><a href="#代码实现（C语言）" class="headerlink" title="代码实现（C语言）"></a>代码实现（C语言）</h3><p>下面是我在洛谷上 AC 的代码，你也可以在 GitHub 上查看：<a target="_blank" rel="noopener" href="https://github.com/z-z-z-y-y-y/practice/blob/main/p3375_KMP.c">p3375_KMP.c</a></p>
-<pre><code class="language-c">#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
-
-void get_pi(char *s, int *pi)
-{
-    int len = strlen(s);
-    int j = 0;
-    pi[0] = 0;
-    for (int i = 1; i &lt; len; i++)
-    {
-        while (j &gt; 0 &amp;&amp; s[i] != s[j])
-        {
-            j = pi[j - 1];
-        }
-        if (s[j] == s[i])
-        {
-            j++;
-        }
-        pi[i] = j;
-    }
-}
-
-void strcompare(char *s1, char *s2, int *pi)
-{
-    int len_s1 = strlen(s1);
-    int len_s2 = strlen(s2);
-
-    int j = 0;
-    for (int i = 0; i &lt; len_s1; i++)
-    {
-        while (j &gt; 0 &amp;&amp; s1[i] != s2[j])
-        {
-            j = pi[j - 1];
-        }
-        if (s1[i] == s2[j])
-        {
-            j++;
-        }
-        if (j == len_s2)
-        {
-            printf(&quot;%d\n&quot;, i - len_s2 + 2);
-        }
-    }
-}
-
-int main()
-{
-    char s1[1000005];
-    char s2[1000005];
-    scanf(&quot; %s&quot;, s1);
-    scanf(&quot; %s&quot;, s2);
-
-    int pi_2[1000005];
-    get_pi(s2, pi_2);
-
-    strcompare(s1, s2, pi_2);
-
-    int len = strlen(s2);
-    for (int i = 0; i &lt; len; i++)
-    {
-        printf(&quot;%d &quot;, pi_2[i]);
-    }
-    return 0;
-}
-</code></pre>
-
+        <p>在算法竞赛或面试中，字符串匹配是一个非常经典的问题。当面对长文本中查找子串的需求时，朴素的暴力匹配（Brute Force）往往效率低下。今天，我们就来探讨解决此类问题的利器——<strong>KMP（Knuth-Morris-Pratt）算法</strong>。</p>
+<p><strong>核心观点</strong>：KMP 算法通过预处理模式串生成“部分匹配表”（即前缀函数 π），巧妙地利用了字符串自身的重复特性，避免了主串指针的回溯，将时间复杂度优化到了线性级别 $O(n+m)$。</p>
+        
+          <p class="article-more-link">
+            <a href="/2026/04/06/KMP-Algorithm/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2026/04/06/KMP-Algorithm/" data-id="cuidrii9iFMtqv8jK6w0Q3mU1" data-title="KMP 字符串匹配算法详解（附洛谷 P3375 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2026/04/06/KMP-Algorithm/" data-id="cuidBejG1TLxYVteBKYwIgsrS" data-title="KMP 字符串匹配算法详解（附洛谷p3375 AC 代码）" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KMP/" rel="tag">KMP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag">字符串</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/KMP/" rel="tag">KMP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag">字符串</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
 
     </footer>
   </div>
@@ -283,7 +231,7 @@ int main()
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/">算法学习</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0/">算法学习</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/">算法笔记</a></li></ul>
     </div>
   </div>
 
@@ -293,7 +241,7 @@ int main()
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/KMP/" rel="tag">KMP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag">字符串</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%A9%E9%98%B5/" rel="tag">矩阵</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/KMP/" rel="tag">KMP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" rel="tag">字符串</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E5%AD%A6/" rel="tag">数学</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%9F%A9%E9%98%B5/" rel="tag">矩阵</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
     </div>
   </div>
 
@@ -303,7 +251,7 @@ int main()
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/KMP/" style="font-size: 10px;">KMP</a> <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="font-size: 10px;">字符串</a> <a href="/tags/%E7%9F%A9%E9%98%B5/" style="font-size: 10px;">矩阵</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a>
+      <a href="/tags/KMP/" style="font-size: 10px;">KMP</a> <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="font-size: 10px;">字符串</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size: 15px;">数学</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 10px;">数据结构</a> <a href="/tags/%E7%9F%A9%E9%98%B5/" style="font-size: 15px;">矩阵</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 20px;">算法</a>
     </div>
   </div>
 
@@ -325,11 +273,15 @@ int main()
       <ul>
         
           <li>
+            <a href="/2026/04/12/Matrix_Inversion/">矩阵求逆的方法（附洛谷 p4783 AC 代码）</a>
+          </li>
+        
+          <li>
             <a href="/2026/04/11/Gaussian-elimination/">高斯消元法详解（附洛谷 P3389 AC 代码）</a>
           </li>
         
           <li>
-            <a href="/2026/04/06/KMP-Algorithm/">KMP 字符串匹配算法详解（附洛谷 P3375 AC 代码）</a>
+            <a href="/2026/04/06/KMP-Algorithm/">KMP 字符串匹配算法详解（附洛谷p3375 AC 代码）</a>
           </li>
         
       </ul>
